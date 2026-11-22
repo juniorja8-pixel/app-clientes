@@ -48,23 +48,28 @@ with tab_lista:
         st.rerun()
 
     try:
-        respuesta = supabase.table("clientes").select("nombre, telefono, correo, servicio, notas").order("id", desc=True).execute()
+        # Traemos todas las columnas directamente sin ordenamiento complejo
+        respuesta = supabase.table("clientes").select("*").execute()
         df = pd.DataFrame(respuesta.data)
 
         if df.empty:
             st.info("Aún no hay clientes registrados.")
         else:
+            # Ocultamos columnas técnicas internas si existen
+            columnas_ocultar = [col for col in ["id", "created_at"] if col in df.columns]
+            df_mostrar = df.drop(columns=columnas_ocultar)
+
             buscar = st.text_input("🔍 Buscar por nombre o teléfono:")
-            if buscar:
-                df = df[
-                    df["nombre"].str.contains(buscar, case=False, na=False) |
-                    df["telefono"].str.contains(buscar, case=False, na=False)
+            if buscar and "nombre" in df_mostrar.columns:
+                df_mostrar = df_mostrar[
+                    df_mostrar["nombre"].astype(str).str.contains(buscar, case=False, na=False) |
+                    df_mostrar["telefono"].astype(str).str.contains(buscar, case=False, na=False)
                 ]
 
-            st.write(f"**Total:** {len(df)} clientes")
-            st.dataframe(df, use_container_width=True, hide_index=True)
+            st.write(f"**Total:** {len(df_mostrar)} clientes")
+            st.dataframe(df_mostrar, use_container_width=True, hide_index=True)
 
-            csv = df.to_csv(index=False).encode("utf-8-sig")
+            csv = df_mostrar.to_csv(index=False).encode("utf-8-sig")
             st.download_button("📥 Descargar en Excel (CSV)", data=csv, file_name="clientes.csv", mime="text/csv", use_container_width=True)
     except Exception as e:
-        st.warning(f"No se pudo cargar la lista: {e}")
+        st.error(f"Detalle exacto del error: {e}")

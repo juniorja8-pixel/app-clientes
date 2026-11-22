@@ -6,7 +6,7 @@ st.set_page_config(page_title="Registro de Clientes", page_icon="📋", layout="
 
 # --- CONEXIÓN A TU BASE DE DATOS ---
 SUPABASE_URL = "https://supabase.co"
-SUPABASE_KEY = "sb_publishable_4bB1SfFEBPXRVcJxrVnLQg_TwQ-AuXA"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdXF3Z291ZXJheWp1aWRhZ3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyODM2ODEsImV4cCI6MjExMDg1OTY4MX0.nJqoww3h8rkiux4DdMsMxwJlRQjXIOkKH84vK9AnrqI"
 
 @st.cache_resource
 def iniciar_conexion() -> Client:

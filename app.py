@@ -4,7 +4,7 @@ import requests
 
 st.set_page_config(page_title="Registro de Clientes", page_icon="📋", layout="centered")
 
-# --- CONEXIÓN DIRECTA A TU BASE DE DATOS ---
+# --- CONEXIÓN A TU BASE DE DATOS ---
 SUPABASE_URL = "https://supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdXF3Z291ZXJheWp1aWRhZ3RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyODM2ODEsImV4cCI6MjExMDg1OTY4MX0.nJqoww3h8rkiux4DdMsMxwJlRQjXIOkKH84vK9AnrqI"
 
@@ -52,8 +52,7 @@ with tab_lista:
     res = requests.get(f"{SUPABASE_URL}/rest/v1/clientes?select=nombre,telefono,correo,servicio,notas&order=id.desc", headers=HEADERS)
     
     if res.status_code == 200:
-        datos_lista = res.json()
-        df = pd.DataFrame(datos_lista)
+        df = pd.DataFrame(res.json())
 
         if df.empty:
             st.info("Aún no hay clientes registrados.")
